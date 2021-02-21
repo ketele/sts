@@ -7,27 +7,23 @@ use App\Entity\Brewer;
 use App\Repository\BeerRepository;
 use App\Repository\BrewerRepository;
 use App\Repository\CountryRepository;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class Importer
 {
     private $beerRepository;
     private $brewerRepository;
     private $countryRepository;
-    private $output;
 
     private $countries;
 
     public function __construct(
         BeerRepository $beerRepository,
         BrewerRepository $brewerRepository,
-        CountryRepository $countryRepository,
-        OutputInterface $output
+        CountryRepository $countryRepository
     ) {
         $this->beerRepository = $beerRepository;
         $this->brewerRepository = $brewerRepository;
         $this->countryRepository = $countryRepository;
-        $this->output = $output;
 
         $this->countries = $countryRepository->findAll();
     }
