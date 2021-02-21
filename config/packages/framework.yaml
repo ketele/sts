@@ -15,3 +15,8 @@ framework:
     #fragments: true
     php_errors:
         log: true
+
+    http_client:
+        scoped_clients:
+            ontario_beer:
+                base_uri: '%env(ONTARIO_BASE_URL)%'

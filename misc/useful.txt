@@ -1,0 +1,8 @@
+composer require symfony/console
+composer require symfony/orm-pack
+composer require --dev symfony/maker-bundle
+symfony console make:migration
+symfony console doctrine:migrations:migrate -n
+composer require symfony/http-client
+symfony composer req api
+composer require scienta/doctrine-json-functions
