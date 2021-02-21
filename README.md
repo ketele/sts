@@ -8,7 +8,7 @@ To run please use following commands
 
 ```
 git clone git@github.com:ketele/sts.git
-cd docker
+cd sts\docker
 docker-compose up
 ```
 
@@ -30,3 +30,7 @@ The API UI is available under following route
 ```text
 http://localhost/api
 ```
+
+## ISO country codes
+
+You may filter country by alpha-2 codes (e.g. PL) or alpha-3 codes (e.g. POL).
