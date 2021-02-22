@@ -7,12 +7,15 @@ use App\Entity\Brewer;
 use App\Repository\BeerRepository;
 use App\Repository\BrewerRepository;
 use App\Repository\CountryRepository;
+use App\VolumeConverter\ConverterContext;
+use App\VolumeConverter\ConverterFactory;
 
 class Importer
 {
     private $beerRepository;
     private $brewerRepository;
     private $countryRepository;
+    private $converter;
 
     private $countries;
 
@@ -26,6 +29,7 @@ class Importer
         $this->brewerRepository = $brewerRepository;
         $this->countryRepository = $countryRepository;
 
+        $this->converter = new ConverterContext();
         $this->countries = $countryRepository->findAll();
     }
 
@@ -64,34 +68,25 @@ class Importer
 
     protected function sizeToLiter(string $sizeText): float
     {
+        $liter = 0;
         $pattern = '/(\d+)\D+(\d+)\s*((\w[^(NEW)])+)/u';
-        $multiplier = 0.001;
 
         preg_match_all($pattern, $sizeText, $matches);
         $number = $matches[1][0];
         $volume = $matches[2][0];
         $unit = $matches[3][0];
 
-        if (!is_numeric($number)) {
-            return null;
+        try {
+            $this->converter->setConverter(ConverterFactory::getConversionMethod($unit));
+            $liter = $this->converter->convert($volume, $number);
+        } catch (\Exception $exception) {
         }
-
-        if (!is_numeric($volume)) {
-            return null;
-        }
-
-        if ($unit !== 'ml') {
-            return null;
-        }
-        // ToDo: Exceptions
-        $liter = $number * $volume * $multiplier;
 
         return $liter;
     }
 
     private function calculatePricePerLiter($price, $volume): float
     {
-        // ToDo: 0 exception
         return ($volume != 0)
             ? (1 / $volume) * $price
             : null;
