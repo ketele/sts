@@ -22,14 +22,15 @@ class Importer
     public function __construct(
         BeerRepository $beerRepository,
         BrewerRepository $brewerRepository,
-        CountryRepository $countryRepository
+        CountryRepository $countryRepository,
+        ConverterContext $converter
     )
     {
         $this->beerRepository = $beerRepository;
         $this->brewerRepository = $brewerRepository;
         $this->countryRepository = $countryRepository;
 
-        $this->converter = new ConverterContext();
+        $this->converter = $converter;
         $this->countries = $countryRepository->findAll();
     }
 
@@ -56,7 +57,7 @@ class Importer
         $beerEntity->setImageUrl($beer->image_url);
         $beerEntity->setOnSale($beer->on_sale);
         $beerEntity->setPrice($beer->price);
-        $beerEntity->setPricePerLiter($this->calculatePricePerLiter($beer->price, $this->sizeToLiter($beer->size)));
+        $beerEntity->setPricePerLiter($this->calculatePricePerLiter($beer->price, $this->sizeToLiters($beer->size)));
         $beerEntity->setSize($beer->size);
         $beerEntity->setStyle($beer->style);
         $beerEntity->setType($beer->type);
@@ -66,9 +67,9 @@ class Importer
         $this->beerRepository->save($beerEntity);
     }
 
-    protected function sizeToLiter(string $sizeText): float
+    protected function sizeToLiters(string $sizeText): float
     {
-        $liter = 0;
+        $liters = 0;
         $pattern = '/(\d+)\D+(\d+)\s*((\w[^(NEW)])+)/u';
 
         preg_match_all($pattern, $sizeText, $matches);
@@ -78,11 +79,13 @@ class Importer
 
         try {
             $this->converter->setConverter(ConverterFactory::getConversionMethod($unit));
-            $liter = $this->converter->convertToLiters($volume, $number);
+            $liters = $this->converter->convertToLiters($volume, $number);
         } catch (\Exception $exception) {
+            //log
+            throw $exception;
         }
 
-        return $liter;
+        return $liters;
     }
 
     private function calculatePricePerLiter($price, $volume): float
