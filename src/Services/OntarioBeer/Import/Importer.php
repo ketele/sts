@@ -78,7 +78,7 @@ class Importer
 
         try {
             $this->converter->setConverter(ConverterFactory::getConversionMethod($unit));
-            $liter = $this->converter->convert($volume, $number);
+            $liter = $this->converter->convertToKilograms($volume, $number);
         } catch (\Exception $exception) {
         }
 
