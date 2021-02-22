@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services\OntarioBeer\Http;
 
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
@@ -19,7 +20,7 @@ class Client
         try {
             $response = $this->client->request('GET', '/beers');
             return json_decode($response->getContent());
-        } catch(HttpExceptionInterface $e) {
+        } catch (HttpExceptionInterface $e) {
 
         } catch (TransportExceptionInterface $e) {
 

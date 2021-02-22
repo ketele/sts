@@ -20,7 +20,8 @@ class Importer
         BeerRepository $beerRepository,
         BrewerRepository $brewerRepository,
         CountryRepository $countryRepository
-    ) {
+    )
+    {
         $this->beerRepository = $beerRepository;
         $this->brewerRepository = $brewerRepository;
         $this->countryRepository = $countryRepository;

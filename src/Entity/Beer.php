@@ -183,7 +183,6 @@ class Beer
 
         return $this;
     }
-// ToDo: add insert witch country codes to migrations
 
     public function getImageUrl(): ?string
     {
