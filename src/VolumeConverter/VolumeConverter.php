@@ -4,5 +4,5 @@ namespace App\VolumeConverter;
 
 interface VolumeConverter
 {
-    public function toKilograms($volume, $number): float;
+    public function toLiters($volume, $number): float;
 }

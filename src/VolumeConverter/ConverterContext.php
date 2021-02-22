@@ -11,8 +11,8 @@ class ConverterContext
         $this->converter = $converter;
     }
 
-    public function convertToKilograms($volume = 0, $number = 1)
+    public function convertToLiters($volume = 0, $number = 1)
     {
-        return $this->converter->toKilograms($volume, $number);
+        return $this->converter->toLiters($volume, $number);
     }
 }
