@@ -14,7 +14,7 @@ services:
     volumes:
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./database/data:/var/lib/mysql
-    command: --lower_case_table_names=2
+    command: --lower_case_table_names=2 --innodb_force_recovery=1
 
   php-fpm:
     build:
