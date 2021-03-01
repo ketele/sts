@@ -9,6 +9,7 @@ use App\Repository\BrewerRepository;
 use App\Repository\CountryRepository;
 use App\VolumeConverter\ConverterContext;
 use App\VolumeConverter\ConverterFactory;
+use Doctrine\ORM\EntityManagerInterface;
 
 class Importer
 {
@@ -16,6 +17,7 @@ class Importer
     private $brewerRepository;
     private $countryRepository;
     private $converter;
+    private $em;
 
     private $countries;
 
@@ -23,12 +25,14 @@ class Importer
         BeerRepository $beerRepository,
         BrewerRepository $brewerRepository,
         CountryRepository $countryRepository,
-        ConverterContext $converter
+        ConverterContext $converter,
+        EntityManagerInterface $em
     )
     {
         $this->beerRepository = $beerRepository;
         $this->brewerRepository = $brewerRepository;
         $this->countryRepository = $countryRepository;
+        $this->em = $em;
 
         $this->converter = $converter;
         $this->countries = $countryRepository->findAll();
@@ -40,7 +44,8 @@ class Importer
         if (!$brewer) {
             $brewer = new Brewer();
             $brewer->setName($beer->brewer);
-            $this->brewerRepository->save($brewer);
+            $this->em->persist($brewer);
+            $this->em->flush();
         }
 
         $beerEntity = $this->beerRepository->findOneBy(['beerId' => $beer->beer_id]);
@@ -64,7 +69,8 @@ class Importer
         $beerEntity->setName($beer->name);
         $beerEntity->setProductId($beer->product_id);
 
-        $this->beerRepository->save($beerEntity);
+        $this->em->persist($beerEntity);
+        $this->em->flush();
     }
 
     protected function sizeToLiters(string $sizeText): float

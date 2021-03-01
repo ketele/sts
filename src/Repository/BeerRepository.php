@@ -3,11 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Beer;
-use App\Entity\Country;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -18,23 +14,9 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class BeerRepository extends ServiceEntityRepository
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
 
-    public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $registry)
     {
-        $this->entityManager = $entityManager;
-
         parent::__construct($registry, Beer::class);
-    }
-
-    public function save(Beer $beer): void
-    {
-        $metadata = $this->entityManager->getClassMetadata(get_class($beer));
-        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_AUTO);
-        $this->entityManager->persist($beer);
-        $this->entityManager->flush();
     }
 }
